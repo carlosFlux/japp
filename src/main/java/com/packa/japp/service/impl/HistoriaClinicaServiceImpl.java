@@ -1,5 +1,10 @@
 package com.packa.japp.service.impl;
 
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.model.dstu2.resource.Observation;
+import ca.uhn.fhir.model.dstu2.resource.Patient;
+import ca.uhn.fhir.model.dstu2.valueset.NameUseEnum;
+import ca.uhn.fhir.parser.IParser;
 import com.packa.japp.naivechain.Block;
 import com.packa.japp.service.HistoriaClinicaService;
 import com.packa.japp.domain.HistoriaClinica;
@@ -8,6 +13,9 @@ import com.packa.japp.service.dto.HistoriaClinicaDTO;
 import com.packa.japp.service.mapper.HistoriaClinicaMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -15,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -34,6 +43,8 @@ public class HistoriaClinicaServiceImpl implements HistoriaClinicaService{
 
     private static final String URI_API = "http://192.168.0.45:3002";
 
+    private final FhirContext fhirCtx = FhirContext.forDstu2();
+
     public HistoriaClinicaServiceImpl(HistoriaClinicaRepository historiaClinicaRepository, HistoriaClinicaMapper historiaClinicaMapper) {
         this.historiaClinicaRepository = historiaClinicaRepository;
         this.historiaClinicaMapper = historiaClinicaMapper;
@@ -48,9 +59,37 @@ public class HistoriaClinicaServiceImpl implements HistoriaClinicaService{
     @Override
     public HistoriaClinicaDTO save(HistoriaClinicaDTO historiaClinicaDTO) {
         log.debug("Request to save HistoriaClinica : {}", historiaClinicaDTO);
-        HistoriaClinica historiaClinica = historiaClinicaMapper.toEntity(historiaClinicaDTO);
+        /*HistoriaClinica historiaClinica = historiaClinicaMapper.toEntity(historiaClinicaDTO);
         historiaClinica = historiaClinicaRepository.save(historiaClinica);
-        return historiaClinicaMapper.toDto(historiaClinica);
+        return historiaClinicaMapper.toDto(historiaClinica);*/
+
+
+
+        Observation localObservation = new Observation();
+        localObservation.setComments("nueva observacion");
+
+        String encoded = fhirCtx.newJsonParser().setPrettyPrint(true).encodeResourceToString(localObservation);
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        StringBuilder localSb = new StringBuilder();
+
+        localSb.append("{\"data\" : ");
+        localSb.append(encoded);
+        localSb.append("}");
+
+        HttpEntity<String> requestBody = new HttpEntity<>(localSb.toString(), headers);
+
+
+        String localRestResponse = restTemplate.postForObject(URI_API + "/mineBlock", requestBody, String.class);
+
+        historiaClinicaDTO.setId(Long.valueOf("44444"));
+
+        return historiaClinicaDTO;
+
     }
 
     /**
@@ -69,13 +108,39 @@ public class HistoriaClinicaServiceImpl implements HistoriaClinicaService{
 */
         Block[] result = restTemplate.getForObject(URI_API + "/blocks", Block[].class);
 
+        //String result = restTemplate.getForObject(URI_API + "/blocks", String.class);
+
+        IParser parser = fhirCtx.newJsonParser();
+
         List<HistoriaClinicaDTO> historiasClinicas = new ArrayList<>();
+
         for (Block item : result) {
-            HistoriaClinicaDTO historiaClinicaDTO = new HistoriaClinicaDTO();
 
-            historiaClinicaDTO.setId(Long.valueOf(item.getIndex()));
+            if (!item.getData().toString().contains("TESTTEST")){
 
-            historiasClinicas.add(historiaClinicaDTO);
+                Map itemMap = (Map) item.getData();
+
+                StringBuilder localSb = new StringBuilder();
+
+                localSb.append("{");
+
+                itemMap.forEach((k,v) -> localSb.append("\"" + k + "\":\"" + v + "\","));
+
+                localSb.append("}");
+
+                localSb.deleteCharAt(localSb.length() - 2);
+
+                Observation localObservation = parser.parseResource(Observation.class, localSb.toString());
+
+                HistoriaClinicaDTO historiaClinicaDTO = new HistoriaClinicaDTO();
+
+                historiaClinicaDTO.setId(Long.valueOf(item.getIndex()));
+
+                historiasClinicas.add(historiaClinicaDTO);
+
+            }
+
+
         }
 
         return historiasClinicas;

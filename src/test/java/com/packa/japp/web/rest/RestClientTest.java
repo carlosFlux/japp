@@ -5,32 +5,80 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.dstu2.resource.Observation;
 import ca.uhn.fhir.model.dstu2.resource.Patient;
 import ca.uhn.fhir.model.dstu2.valueset.NameUseEnum;
+import ca.uhn.fhir.parser.IParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.packa.japp.domain.ObservationMixIn;
 import com.packa.japp.naivechain.Block;
 import org.junit.Ignore;
 import org.junit.Test;
-
 import org.junit.runner.RunWith;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @RunWith(SpringRunner.class)
 public class RestClientTest {
 
-/*
-    @Ignore
+    private static final String URI_API = "http://192.168.0.45:3002";
+
+
+    @Test
     public void getBlockChain() throws Exception {
         final String uri = "http://192.168.0.45:3002/blocks";
 
         RestTemplate restTemplate = new RestTemplate();
+
+     /*
+        List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
+        MappingJackson2HttpMessageConverter jsonMessageConverter = new MappingJackson2HttpMessageConverter();
+        jsonMessageConverter.setObjectMapper(objectMapper);
+        messageConverters.add(jsonMessageConverter);
+        restTemplate.setMessageConverters(messageConverters);*/
+
+
         //String result = restTemplate.getForObject(uri, String.class);
+
+        //objectMapper.readValue(result,Block[].class);
+
         Block[] result = restTemplate.getForObject(uri, Block[].class);
 
+        FhirContext fhirCtx = FhirContext.forDstu2();
+
+        IParser parser = fhirCtx.newJsonParser();
+
+
         for (Block item : result) {
-            System.out.println(item);
+
+            if (!item.getData().toString().contains("TESTTEST")){
+
+                Map itemMap = (Map) item.getData();
+
+                StringBuilder localSb = new StringBuilder();
+
+                localSb.append("{");
+
+                itemMap.forEach((k,v) -> localSb.append("\"" + k + "\":\"" + v + "\","));
+
+                localSb.append("}");
+
+                System.out.println(localSb.deleteCharAt(localSb.length() - 2 ).toString());
+                Observation ob = parser.parseResource(Observation.class, localSb.toString());
+                System.out.println(ob);
+            }
+
+
         }
 
 
-
+/*
         // HttpHeaders
         HttpHeaders headers = new HttpHeaders();
 
@@ -46,15 +94,16 @@ public class RestClientTest {
         RestTemplate restTemplate = new RestTemplate();
 
         // Send request with GET method, and Headers.
-        ResponseEntity<Block[]> response = restTemplate.exchange(uri,HttpMethod.GET, entity, Block[].class);
+        ResponseEntity<Block[]> response = restTemplate.exchange(uri, HttpMethod.GET, entity, Block[].class);
 
         Block[] result = response.getBody();
 
+*/
+
+    }
 
 
-    }*/
-
-    @Test
+    @Ignore
     public void encodingTest() throws Exception {
 
         FhirContext ctx = FhirContext.forDstu2();
@@ -68,5 +117,47 @@ public class RestClientTest {
 
         String encoded = ctx.newJsonParser().setPrettyPrint(true).encodeResourceToString(localObservation);
         System.out.println(encoded);
+
+
+        IParser parser = ctx.newJsonParser();
+
+        Observation ob = parser.parseResource(Observation.class, encoded);
+
+        System.out.println(ob.getComments());
     }
-}
+
+
+
+
+    @Test
+    public void postTest() throws Exception {
+
+        FhirContext fhirCtx = FhirContext.forDstu2();
+
+        Observation localObservation = new Observation();
+        localObservation.setComments("nueva observacion");
+
+        String encoded = fhirCtx.newJsonParser().encodeResourceToString(localObservation);
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        StringBuilder localSb = new StringBuilder();
+
+        localSb.append("{\"data\" : ");
+        localSb.append(encoded);
+        localSb.append("}");
+
+        System.out.println(localSb.toString());
+
+        HttpEntity<String> requestBody = new HttpEntity<>(localSb.toString(), headers);
+
+        String localRestResponse = restTemplate.postForObject(URI_API + "/mineBlock", requestBody, String.class);
+
+        System.out.println(localRestResponse);
+    }
+
+    }

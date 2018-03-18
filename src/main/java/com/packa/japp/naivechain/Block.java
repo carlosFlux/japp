@@ -1,5 +1,7 @@
 package com.packa.japp.naivechain;
 
+import com.fasterxml.jackson.annotation.JsonRawValue;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -10,10 +12,11 @@ public class Block implements Serializable {
     private int index;
     private String previousHash;
     private String timestamp;
-    private String data;
+    @JsonRawValue
+    private Object data;
     private String hash;
 
-    public void Block(int index, String previousHash, String timestamp, String data, String hash) {
+    public void Block(int index, String previousHash, String timestamp, Object data, String hash) {
         this.index = index;
         this.previousHash = previousHash.toString();
         this.timestamp = timestamp;
@@ -46,11 +49,11 @@ public class Block implements Serializable {
         this.timestamp = timestamp;
     }
 
-    public String getData() {
+    public Object getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(Object data) {
         this.data = data;
     }
 
