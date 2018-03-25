@@ -5,9 +5,9 @@
         .module('jappApp')
         .controller('HistoriaClinicaDetailController', HistoriaClinicaDetailController);
 
-    HistoriaClinicaDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'HistoriaClinica', 'Paciente', 'Sintoma', 'Medico', 'Institucion'];
+    HistoriaClinicaDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'HistoriaClinica', 'Medico', 'Institucion', 'Paciente', 'Sintoma'];
 
-    function HistoriaClinicaDetailController($scope, $rootScope, $stateParams, previousState, entity, HistoriaClinica, Paciente, Sintoma, Medico, Institucion) {
+    function HistoriaClinicaDetailController($scope, $rootScope, $stateParams, previousState, entity, HistoriaClinica, Medico, Institucion, Paciente, Sintoma) {
         var vm = this;
 
         vm.historiaClinica = entity;

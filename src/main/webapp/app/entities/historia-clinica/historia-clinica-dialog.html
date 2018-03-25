@@ -15,18 +15,6 @@
         </div>
 
         <div class="form-group">
-            <label for="field_paciente">Paciente</label>
-            <select class="form-control" id="field_paciente" name="paciente" ng-model="vm.historiaClinica.pacienteId" ng-options="paciente.id as paciente.id for paciente in vm.pacientes"            >
-                <option value=""></option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="field_sintoma">Sintoma</label>
-            <select class="form-control" id="field_sintoma" name="sintoma" ng-model="vm.historiaClinica.sintomaId" ng-options="sintoma.id as sintoma.id for sintoma in vm.sintomas | orderBy:'id'">
-                <option value=""></option>
-            </select>
-        </div>
-        <div class="form-group">
             <label for="field_medico">Medico</label>
             <select class="form-control" id="field_medico" name="medico" ng-model="vm.historiaClinica.medicoId" ng-options="medico.id as medico.id for medico in vm.medicos"            >
                 <option value=""></option>
@@ -34,7 +22,19 @@
         </div>
         <div class="form-group">
             <label for="field_institucion">Institucion</label>
-            <select class="form-control" id="field_institucion" name="institucion" ng-model="vm.historiaClinica.institucionId" ng-options="institucion.id as institucion.id for institucion in vm.institucions"            >
+            <select class="form-control" id="field_institucion" name="institucion" ng-model="vm.historiaClinica.institucionId" ng-options="institucion.id as institucion.nombre for institucion in vm.institucions"            >
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="field_paciente">Paciente</label>
+            <select class="form-control" id="field_paciente" name="paciente" ng-model="vm.historiaClinica.pacienteId" ng-options="paciente.id as paciente.dni for paciente in vm.pacientes"            >
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="field_sintoma">Sintoma</label>
+            <select class="form-control" id="field_sintoma" name="sintoma" ng-model="vm.historiaClinica.sintomaId" ng-options="sintoma.id as sintoma.id for sintoma in vm.sintomas | orderBy:'id'">
                 <option value=""></option>
             </select>
         </div>

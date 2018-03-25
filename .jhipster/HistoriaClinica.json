@@ -2,20 +2,6 @@
     "fluentMethods": true,
     "relationships": [
         {
-            "relationshipName": "paciente",
-            "otherEntityName": "paciente",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "id"
-        },
-        {
-            "relationshipName": "sintoma",
-            "otherEntityName": "sintoma",
-            "relationshipType": "one-to-one",
-            "otherEntityField": "id",
-            "ownerSide": true,
-            "otherEntityRelationshipName": "historiaClinica"
-        },
-        {
             "relationshipName": "medico",
             "otherEntityName": "medico",
             "relationshipType": "many-to-one",
@@ -25,7 +11,21 @@
             "relationshipName": "institucion",
             "otherEntityName": "institucion",
             "relationshipType": "many-to-one",
-            "otherEntityField": "id"
+            "otherEntityField": "nombre"
+        },
+        {
+            "relationshipName": "paciente",
+            "otherEntityName": "paciente",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "dni"
+        },
+        {
+            "relationshipName": "sintoma",
+            "otherEntityName": "sintoma",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "historiaClinica"
         }
     ],
     "fields": [],

@@ -13,13 +13,17 @@ public class HistoriaClinicaDTO implements Serializable {
 
     private Long id;
 
-    private Long pacienteId;
-
-    private Long sintomaId;
-
     private Long medicoId;
 
     private Long institucionId;
+
+    private String institucionNombre;
+
+    private Long pacienteId;
+
+    private String pacienteDni;
+
+    private Long sintomaId;
 
     public Long getId() {
         return id;
@@ -27,22 +31,6 @@ public class HistoriaClinicaDTO implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getPacienteId() {
-        return pacienteId;
-    }
-
-    public void setPacienteId(Long pacienteId) {
-        this.pacienteId = pacienteId;
-    }
-
-    public Long getSintomaId() {
-        return sintomaId;
-    }
-
-    public void setSintomaId(Long sintomaId) {
-        this.sintomaId = sintomaId;
     }
 
     public Long getMedicoId() {
@@ -59,6 +47,38 @@ public class HistoriaClinicaDTO implements Serializable {
 
     public void setInstitucionId(Long institucionId) {
         this.institucionId = institucionId;
+    }
+
+    public String getInstitucionNombre() {
+        return institucionNombre;
+    }
+
+    public void setInstitucionNombre(String institucionNombre) {
+        this.institucionNombre = institucionNombre;
+    }
+
+    public Long getPacienteId() {
+        return pacienteId;
+    }
+
+    public void setPacienteId(Long pacienteId) {
+        this.pacienteId = pacienteId;
+    }
+
+    public String getPacienteDni() {
+        return pacienteDni;
+    }
+
+    public void setPacienteDni(String pacienteDni) {
+        this.pacienteDni = pacienteDni;
+    }
+
+    public Long getSintomaId() {
+        return sintomaId;
+    }
+
+    public void setSintomaId(Long sintomaId) {
+        this.sintomaId = sintomaId;
     }
 
     @Override

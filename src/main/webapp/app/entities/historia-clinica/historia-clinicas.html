@@ -19,10 +19,10 @@
             <thead>
                 <tr>
                     <th><span>ID</span></th>
-                    <th><span>Paciente</span></th>
-                    <th><span>Sintoma</span></th>
                     <th><span>Medico</span></th>
                     <th><span>Institucion</span></th>
+                    <th><span>Paciente</span></th>
+                    <th><span>Sintoma</span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -30,16 +30,16 @@
                 <tr ng-repeat="historiaClinica in vm.historiaClinicas track by historiaClinica.id">
                     <td><a ui-sref="historia-clinica-detail({id:historiaClinica.id})">{{historiaClinica.id}}</a></td>
                     <td>
-                        <a ui-sref="paciente-detail({id:historiaClinica.pacienteId})">{{historiaClinica.pacienteId}}</a>
-                    </td>
-                    <td>
-                        <a ui-sref="sintoma-detail({id:historiaClinica.sintomaId})">{{historiaClinica.sintomaId}}</a>
-                    </td>
-                    <td>
                         <a ui-sref="medico-detail({id:historiaClinica.medicoId})">{{historiaClinica.medicoId}}</a>
                     </td>
                     <td>
-                        <a ui-sref="institucion-detail({id:historiaClinica.institucionId})">{{historiaClinica.institucionId}}</a>
+                        <a ui-sref="institucion-detail({id:historiaClinica.institucionId})">{{historiaClinica.institucionNombre}}</a>
+                    </td>
+                    <td>
+                        <a ui-sref="paciente-detail({id:historiaClinica.pacienteId})">{{historiaClinica.pacienteDni}}</a>
+                    </td>
+                    <td>
+                        <a ui-sref="sintoma-detail({id:historiaClinica.sintomaId})">{{historiaClinica.sintomaId}}</a>
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">

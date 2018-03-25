@@ -8,18 +8,6 @@
     -->
     <changeSet id="20180303214404-2" author="jhipster">
         
-        <addForeignKeyConstraint baseColumnNames="paciente_id"
-                                 baseTableName="historia_clinica"
-                                 constraintName="fk_historia_clinica_paciente_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="paciente"/>
-
-        <addForeignKeyConstraint baseColumnNames="sintoma_id"
-                                 baseTableName="historia_clinica"
-                                 constraintName="fk_historia_clinica_sintoma_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="sintoma"/>
-
         <addForeignKeyConstraint baseColumnNames="medico_id"
                                  baseTableName="historia_clinica"
                                  constraintName="fk_historia_clinica_medico_id"
@@ -31,6 +19,18 @@
                                  constraintName="fk_historia_clinica_institucion_id"
                                  referencedColumnNames="id"
                                  referencedTableName="institucion"/>
+
+        <addForeignKeyConstraint baseColumnNames="paciente_id"
+                                 baseTableName="historia_clinica"
+                                 constraintName="fk_historia_clinica_paciente_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="paciente"/>
+
+        <addForeignKeyConstraint baseColumnNames="sintoma_id"
+                                 baseTableName="historia_clinica"
+                                 constraintName="fk_historia_clinica_sintoma_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="sintoma"/>
 
     </changeSet>
 </databaseChangeLog>

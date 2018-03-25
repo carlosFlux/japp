@@ -20,17 +20,17 @@ public class HistoriaClinica implements Serializable {
     private Long id;
 
     @ManyToOne
+    private Medico medico;
+
+    @ManyToOne
+    private Institucion institucion;
+
+    @ManyToOne
     private Paciente paciente;
 
     @OneToOne
     @JoinColumn(unique = true)
     private Sintoma sintoma;
-
-    @ManyToOne
-    private Medico medico;
-
-    @ManyToOne
-    private Institucion institucion;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -39,32 +39,6 @@ public class HistoriaClinica implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Paciente getPaciente() {
-        return paciente;
-    }
-
-    public HistoriaClinica paciente(Paciente paciente) {
-        this.paciente = paciente;
-        return this;
-    }
-
-    public void setPaciente(Paciente paciente) {
-        this.paciente = paciente;
-    }
-
-    public Sintoma getSintoma() {
-        return sintoma;
-    }
-
-    public HistoriaClinica sintoma(Sintoma sintoma) {
-        this.sintoma = sintoma;
-        return this;
-    }
-
-    public void setSintoma(Sintoma sintoma) {
-        this.sintoma = sintoma;
     }
 
     public Medico getMedico() {
@@ -91,6 +65,32 @@ public class HistoriaClinica implements Serializable {
 
     public void setInstitucion(Institucion institucion) {
         this.institucion = institucion;
+    }
+
+    public Paciente getPaciente() {
+        return paciente;
+    }
+
+    public HistoriaClinica paciente(Paciente paciente) {
+        this.paciente = paciente;
+        return this;
+    }
+
+    public void setPaciente(Paciente paciente) {
+        this.paciente = paciente;
+    }
+
+    public Sintoma getSintoma() {
+        return sintoma;
+    }
+
+    public HistoriaClinica sintoma(Sintoma sintoma) {
+        this.sintoma = sintoma;
+        return this;
+    }
+
+    public void setSintoma(Sintoma sintoma) {
+        this.sintoma = sintoma;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

@@ -5,14 +5,16 @@
         .module('jappApp')
         .controller('HistoriaClinicaDialogController', HistoriaClinicaDialogController);
 
-    HistoriaClinicaDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', '$q', 'entity', 'HistoriaClinica', 'Paciente', 'Sintoma', 'Medico', 'Institucion'];
+    HistoriaClinicaDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', '$q', 'entity', 'HistoriaClinica', 'Medico', 'Institucion', 'Paciente', 'Sintoma'];
 
-    function HistoriaClinicaDialogController ($timeout, $scope, $stateParams, $uibModalInstance, $q, entity, HistoriaClinica, Paciente, Sintoma, Medico, Institucion) {
+    function HistoriaClinicaDialogController ($timeout, $scope, $stateParams, $uibModalInstance, $q, entity, HistoriaClinica, Medico, Institucion, Paciente, Sintoma) {
         var vm = this;
 
         vm.historiaClinica = entity;
         vm.clear = clear;
         vm.save = save;
+        vm.medicos = Medico.query();
+        vm.institucions = Institucion.query();
         vm.pacientes = Paciente.query();
         vm.sintomas = Sintoma.query({filter: 'historiaclinica-is-null'});
         $q.all([vm.historiaClinica.$promise, vm.sintomas.$promise]).then(function() {
@@ -23,8 +25,6 @@
         }).then(function(sintoma) {
             vm.sintomas.push(sintoma);
         });
-        vm.medicos = Medico.query();
-        vm.institucions = Institucion.query();
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();
