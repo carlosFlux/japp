@@ -2,15 +2,14 @@ package com.packa.japp.service.impl;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.dstu2.resource.Observation;
-import ca.uhn.fhir.model.dstu2.resource.Patient;
-import ca.uhn.fhir.model.dstu2.valueset.NameUseEnum;
 import ca.uhn.fhir.parser.IParser;
-import com.packa.japp.naivechain.Block;
-import com.packa.japp.service.HistoriaClinicaService;
 import com.packa.japp.domain.HistoriaClinica;
+import com.packa.japp.naivechain.Block;
 import com.packa.japp.repository.HistoriaClinicaRepository;
+import com.packa.japp.service.HistoriaClinicaService;
 import com.packa.japp.service.dto.HistoriaClinicaDTO;
 import com.packa.japp.service.mapper.HistoriaClinicaMapper;
+import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -21,10 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing HistoriaClinica.
@@ -83,8 +80,9 @@ public class HistoriaClinicaServiceImpl implements HistoriaClinicaService{
 
         HttpEntity<String> requestBody = new HttpEntity<>(localSb.toString(), headers);
 
-
         String localRestResponse = restTemplate.postForObject(URI_API + "/mineBlock", requestBody, String.class);
+
+        log.debug("Save response :: ", localRestResponse);
 
         historiaClinicaDTO.setId(Long.valueOf("44444"));
 
@@ -108,38 +106,21 @@ public class HistoriaClinicaServiceImpl implements HistoriaClinicaService{
 */
         Block[] result = restTemplate.getForObject(URI_API + "/blocks", Block[].class);
 
-        //String result = restTemplate.getForObject(URI_API + "/blocks", String.class);
-
         IParser parser = fhirCtx.newJsonParser();
 
         List<HistoriaClinicaDTO> historiasClinicas = new ArrayList<>();
 
         for (Block item : result) {
 
-            if (!item.getData().toString().contains("TESTTEST")){
+            Map itemMap = (Map) item.getData();
 
-                Map itemMap = (Map) item.getData();
+            Observation localObservation = parser.parseResource(Observation.class, JSONObject.toJSONString(itemMap));
 
-                StringBuilder localSb = new StringBuilder();
+            HistoriaClinicaDTO historiaClinicaDTO = new HistoriaClinicaDTO();
 
-                localSb.append("{");
+            historiaClinicaDTO.setId(Long.valueOf(item.getIndex()));
 
-                itemMap.forEach((k,v) -> localSb.append("\"" + k + "\":\"" + v + "\","));
-
-                localSb.append("}");
-
-                localSb.deleteCharAt(localSb.length() - 2);
-
-                Observation localObservation = parser.parseResource(Observation.class, localSb.toString());
-
-                HistoriaClinicaDTO historiaClinicaDTO = new HistoriaClinicaDTO();
-
-                historiaClinicaDTO.setId(Long.valueOf(item.getIndex()));
-
-                historiasClinicas.add(historiaClinicaDTO);
-
-            }
-
+            historiasClinicas.add(historiaClinicaDTO);
 
         }
 

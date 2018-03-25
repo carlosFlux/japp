@@ -9,6 +9,7 @@ import ca.uhn.fhir.parser.IParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.packa.japp.domain.ObservationMixIn;
 import com.packa.japp.naivechain.Block;
+import net.minidev.json.JSONObject;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,27 +55,10 @@ public class RestClientTest {
 
         IParser parser = fhirCtx.newJsonParser();
 
-
         for (Block item : result) {
-
-            if (!item.getData().toString().contains("TESTTEST")){
-
-                Map itemMap = (Map) item.getData();
-
-                StringBuilder localSb = new StringBuilder();
-
-                localSb.append("{");
-
-                itemMap.forEach((k,v) -> localSb.append("\"" + k + "\":\"" + v + "\","));
-
-                localSb.append("}");
-
-                System.out.println(localSb.deleteCharAt(localSb.length() - 2 ).toString());
-                Observation ob = parser.parseResource(Observation.class, localSb.toString());
-                System.out.println(ob);
-            }
-
-
+            Map itemMap = (Map) item.getData();
+            System.out.println(JSONObject.toJSONString(itemMap));
+            Observation localObservation = parser.parseResource(Observation.class, JSONObject.toJSONString(itemMap));
         }
 
 
@@ -157,7 +141,6 @@ public class RestClientTest {
 
         String localRestResponse = restTemplate.postForObject(URI_API + "/mineBlock", requestBody, String.class);
 
-        System.out.println(localRestResponse);
     }
 
     }
