@@ -13,7 +13,7 @@
             parent: 'entity',
             url: '/historia-clinica',
             data: {
-                authorities: ['ROLE_USER'],
+                authorities: ['ROLE_USER','ROLE_PACIENTE'],
                 pageTitle: 'HistoriaClinicas'
             },
             views: {

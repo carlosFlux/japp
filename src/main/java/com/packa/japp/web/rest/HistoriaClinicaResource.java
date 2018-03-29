@@ -1,6 +1,7 @@
 package com.packa.japp.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.packa.japp.security.AuthoritiesConstants;
 import com.packa.japp.service.HistoriaClinicaService;
 import com.packa.japp.web.rest.errors.BadRequestAlertException;
 import com.packa.japp.web.rest.util.HeaderUtil;
@@ -9,6 +10,7 @@ import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
