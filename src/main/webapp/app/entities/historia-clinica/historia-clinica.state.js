@@ -13,7 +13,7 @@
             parent: 'entity',
             url: '/historia-clinica',
             data: {
-                authorities: ['ROLE_USER','ROLE_PACIENTE'],
+                authorities: ['ROLE_USER'],
                 pageTitle: 'HistoriaClinicas'
             },
             views: {
@@ -58,7 +58,7 @@
             parent: 'historia-clinica-detail',
             url: '/detail/edit',
             data: {
-                authorities: ['ROLE_USER']
+                authorities: ['ROLE_INSTITUCION']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
@@ -83,7 +83,7 @@
             parent: 'historia-clinica',
             url: '/new',
             data: {
-                authorities: ['ROLE_USER']
+                authorities: ['ROLE_INSTITUCION', 'ROLE_MEDICO']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
@@ -110,7 +110,7 @@
             parent: 'historia-clinica',
             url: '/{id}/edit',
             data: {
-                authorities: ['ROLE_USER']
+                authorities: ['ROLE_INSTITUCION', 'ROLE_MEDICO']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
@@ -135,7 +135,7 @@
             parent: 'historia-clinica',
             url: '/{id}/delete',
             data: {
-                authorities: ['ROLE_USER']
+                authorities: ['ROLE_INSTITUCION']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
