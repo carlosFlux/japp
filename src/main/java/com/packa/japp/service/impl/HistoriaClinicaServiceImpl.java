@@ -46,10 +46,15 @@ public class HistoriaClinicaServiceImpl implements HistoriaClinicaService{
     @Override
     public HistoriaClinicaDTO save(HistoriaClinicaDTO historiaClinicaDTO) {
         log.debug("Request to save HistoriaClinica : {}", historiaClinicaDTO);
-        HistoriaClinica historiaClinica = historiaClinicaMapper.toEntity(historiaClinicaDTO);
-        historiaClinica = historiaClinicaRepository.save(historiaClinica);
+        HistoriaClinica historiaClinica = this.saveHc(historiaClinicaDTO);
         blockChainRepository.save(historiaClinica);
         return historiaClinicaMapper.toDto(historiaClinica);
+    }
+
+    private HistoriaClinica saveHc(HistoriaClinicaDTO historiaClinicaDTO) {
+        HistoriaClinica historiaClinica = historiaClinicaMapper.toEntity(historiaClinicaDTO);
+        historiaClinica = historiaClinicaRepository.save(historiaClinica);
+        return historiaClinica;
     }
 
     /**
@@ -62,8 +67,15 @@ public class HistoriaClinicaServiceImpl implements HistoriaClinicaService{
     public List<HistoriaClinicaDTO> findAll() {
         log.debug("Request to get all HistoriaClinicas");
         List<HistoriaClinicaDTO> localHcs = historiaClinicaRepository.findAll().stream().map(historiaClinicaMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
-        blockChainRepository.findAll(localHcs);
-        return localHcs;
+        List<HistoriaClinicaDTO> localHcsToSave = blockChainRepository.findAll(localHcs);
+
+        if (!localHcsToSave.isEmpty()){
+            for (HistoriaClinicaDTO hcItem: localHcsToSave ) {
+                this.saveHc(hcItem);
+            }
+        }
+
+        return historiaClinicaRepository.findAll().stream().map(historiaClinicaMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
     /**

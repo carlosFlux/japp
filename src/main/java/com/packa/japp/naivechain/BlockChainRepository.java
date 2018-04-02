@@ -6,16 +6,22 @@ import ca.uhn.fhir.parser.IParser;
 import com.packa.japp.config.Constants;
 import com.packa.japp.domain.HistoriaClinica;
 import com.packa.japp.service.dto.HistoriaClinicaDTO;
+import com.packa.japp.service.impl.HistoriaClinicaServiceImpl;
 import net.minidev.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class BlockChainRepository {
+
+    private final Logger log = LoggerFactory.getLogger(BlockChainRepository.class);
 
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -27,6 +33,10 @@ public class BlockChainRepository {
 
         IParser parser = fhirCtx.newJsonParser();
 
+        List<HistoriaClinicaDTO> hcsToReturn = new ArrayList<HistoriaClinicaDTO>();
+
+        log.debug("Cantidad de elementos del bloque : {}", result.length);
+
         for (Block item : result) {
 
             Map itemMap = (Map) item.getData();
@@ -35,14 +45,15 @@ public class BlockChainRepository {
 
             HistoriaClinicaDTO historiaClinicaDTO = new HistoriaClinicaDTO();
 
+            log.debug("Id de elemento del bloque : {}", localObservation.getId().getIdPartAsLong());
+
             historiaClinicaDTO.setId(localObservation.getId().getIdPartAsLong());
 
             if (!hcsParameter.contains(historiaClinicaDTO)){
-                hcsParameter.add(historiaClinicaDTO);
-                //también tendría que gardar en la BD, porque es un dato que no tengo y viene de otra organización
+                hcsToReturn.add(historiaClinicaDTO);
             }
         }
-        return hcsParameter;
+        return hcsToReturn;
     }
 
     public void save(HistoriaClinica historiaClinica) {
